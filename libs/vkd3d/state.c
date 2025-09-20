@@ -3525,8 +3525,8 @@ HRESULT vkd3d_bindless_state_init(struct vkd3d_bindless_state *bindless_state,
 
     if ((bindless_state->flags & required_flags) != required_flags)
     {
-        ERR("Insufficient descriptor indexing support.\n");
-        goto fail;
+        WARN("Insufficient descriptor indexing support.\n");
+        // goto fail;
     }
 
     if (bindless_state->flags & VKD3D_RAW_VA_UAV_COUNTER)

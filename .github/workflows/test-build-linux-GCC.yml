@@ -1,4 +1,4 @@
-name: Test Builds on Linux
+name: Test Builds on Linux (GCC)
 
 on: [workflow_dispatch]
 

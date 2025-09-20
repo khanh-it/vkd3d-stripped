@@ -1,4 +1,4 @@
-name: Test Builds on Linux
+name: Test Builds on Linux (Clang)
 
 on: [workflow_dispatch]
 

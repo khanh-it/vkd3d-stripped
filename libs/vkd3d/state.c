@@ -300,9 +300,9 @@ static HRESULT vkd3d_create_pipeline_layout(struct d3d12_device *device,
 
     if (set_layout_count > device->vk_info.device_limits.maxBoundDescriptorSets)
     {
-        WARN("Root signature requires %u descriptor sets, but device only supports %u.\n",
+        ERR("Root signature requires %u descriptor sets, but device only supports %u.\n",
             set_layout_count, device->vk_info.device_limits.maxBoundDescriptorSets);
-        // return E_INVALIDARG;
+        return E_INVALIDARG;
     }
 
     pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -839,9 +839,9 @@ static HRESULT d3d12_root_signature_init(struct d3d12_root_signature *root_signa
     }
     else
     {
-        WARN("Root signature requires %d bytes of push constant space, but device only supports %d bytes.\n",
+        ERR("Root signature requires %d bytes of push constant space, but device only supports %d bytes.\n",
                 root_signature->push_constant_range.size, vk_device_properties->limits.maxPushConstantsSize);
-        // goto fail;
+        goto fail;
     }
 
     if (info.has_raw_va_uav_counters)

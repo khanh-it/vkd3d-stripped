@@ -92,7 +92,7 @@ static void do_benchmark_run(ID3D12Device *device)
     ID3D12Resource *texture;
     HRESULT hr;
 
-    heap_desc.NumDescriptors = 1000000;
+    heap_desc.NumDescriptors = 500000;
     heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     heap_desc.NodeMask = 0;
@@ -119,7 +119,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Benchmark creation of 1 million SRVs in CPU-only heaps. */
     {
         start_time = get_time();
-        fill_descriptor_heap_srv(device, cpu_heap, texture, &srv_desc, 1000000);
+        fill_descriptor_heap_srv(device, cpu_heap, texture, &srv_desc, 500000);
         end_time = get_time();
         printf("Creating 1M SRVs on blank CPU heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -127,7 +127,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Do the same thing again, but this time on a used heap, so we also have to destroy existing views. */
     {
         start_time = get_time();
-        fill_descriptor_heap_srv(device, cpu_heap, texture, &srv_desc, 1000000);
+        fill_descriptor_heap_srv(device, cpu_heap, texture, &srv_desc, 500000);
         end_time = get_time();
         printf("Creating 1M SRVs on dirty CPU heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -135,7 +135,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Fill shader visible heaps */
     {
         start_time = get_time();
-        fill_descriptor_heap_srv(device, gpu_heap, texture, &srv_desc, 1000000);
+        fill_descriptor_heap_srv(device, gpu_heap, texture, &srv_desc, 500000);
         end_time = get_time();
         printf("Creating 1M SRVs on blank GPU-visible heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -143,7 +143,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Do the same thing again, but this time on a used heap, so we also have to destroy existing views. */
     {
         start_time = get_time();
-        fill_descriptor_heap_srv(device, gpu_heap, texture, &srv_desc, 1000000);
+        fill_descriptor_heap_srv(device, gpu_heap, texture, &srv_desc, 500000);
         end_time = get_time();
         printf("Creating 1M SRVs on dirty GPU-visible heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -151,7 +151,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Try copying descriptors */
     {
         start_time = get_time();
-        copy_descriptor_heap(device, gpu_heap, cpu_heap, 1000000);
+        copy_descriptor_heap(device, gpu_heap, cpu_heap, 500000);
         end_time = get_time();
         printf("Copying 1M SRVs to dirty GPU visible heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -159,7 +159,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Try copying descriptors with duplication */
     {
         start_time = get_time();
-        copy_descriptor_heap(device, gpu_heap, cpu_heap, 1000000);
+        copy_descriptor_heap(device, gpu_heap, cpu_heap, 500000);
         end_time = get_time();
         printf("Copying 1M SRVs (duplicates) took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -167,7 +167,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Create zero descriptors. */
     {
         start_time = get_time();
-        zero_descriptor_heap(device, gpu_heap, texture, 1000000);
+        zero_descriptor_heap(device, gpu_heap, texture, 500000);
         end_time = get_time();
         printf("Creating 1M null-SRVs took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }
@@ -175,7 +175,7 @@ static void do_benchmark_run(ID3D12Device *device)
     /* Try copying descriptors on top of zero-initialized descriptor heap. */
     {
         start_time = get_time();
-        copy_descriptor_heap(device, gpu_heap, cpu_heap, 1000000);
+        copy_descriptor_heap(device, gpu_heap, cpu_heap, 500000);
         end_time = get_time();
         printf("Copying 1M SRVs to zeroed GPU visible heap took: %.3f ms.\n", 1e3 * (end_time - start_time));
     }

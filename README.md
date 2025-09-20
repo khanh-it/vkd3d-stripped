@@ -19,7 +19,7 @@ Backwards compatibility with the vkd3d standalone API is not a goal of this proj
 There are some hard requirements on drivers to be able to implement D3D12 in a reasonably performant way.
 
 - Vulkan 1.1
-- `VK_EXT_descriptor_indexing` with at least 1000000 UpdateAfterBind descriptors for all types except UniformBuffer.
+- `VK_EXT_descriptor_indexing` with at least 500000 UpdateAfterBind descriptors for all types except UniformBuffer.
   Essentially all features in `VkPhysicalDeviceDescriptorIndexingFeatures` must be supported.
 - `VK_KHR_timeline_semaphore`
 

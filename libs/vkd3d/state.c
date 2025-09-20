@@ -3349,7 +3349,7 @@ static uint32_t d3d12_max_descriptor_count_from_heap_type(D3D12_DESCRIPTOR_HEAP_
     switch (heap_type)
     {
         case D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:
-            return 1000000;
+            return 500000;
 
         case D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER:
             return 2048;
@@ -3467,25 +3467,25 @@ static uint32_t vkd3d_bindless_state_get_bindless_flags(struct d3d12_device *dev
             !device_info->descriptor_indexing_features.descriptorBindingVariableDescriptorCount)
         return 0;
 
-    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindSampledImages >= 1000000 &&
+    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindSampledImages >= 500000 &&
             device_info->descriptor_indexing_features.descriptorBindingSampledImageUpdateAfterBind &&
             device_info->descriptor_indexing_features.descriptorBindingUniformTexelBufferUpdateAfterBind &&
             device_info->descriptor_indexing_features.shaderSampledImageArrayNonUniformIndexing &&
             device_info->descriptor_indexing_features.shaderUniformTexelBufferArrayNonUniformIndexing)
         flags |= VKD3D_BINDLESS_SAMPLER | VKD3D_BINDLESS_SRV;
 
-    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageImages >= 1000000 &&
+    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageImages >= 500000 &&
             device_info->descriptor_indexing_features.descriptorBindingStorageImageUpdateAfterBind &&
             device_info->descriptor_indexing_features.descriptorBindingStorageTexelBufferUpdateAfterBind &&
             device_info->descriptor_indexing_features.shaderStorageImageArrayNonUniformIndexing &&
             device_info->descriptor_indexing_features.shaderStorageTexelBufferArrayNonUniformIndexing)
         flags |= VKD3D_BINDLESS_UAV;
 
-    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindUniformBuffers >= 1000000 &&
+    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindUniformBuffers >= 500000 &&
             device_info->descriptor_indexing_features.descriptorBindingUniformBufferUpdateAfterBind &&
             device_info->descriptor_indexing_features.shaderUniformBufferArrayNonUniformIndexing)
         flags |= VKD3D_BINDLESS_CBV;
-    else if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers >= 1000000 &&
+    else if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers >= 500000 &&
             device_info->descriptor_indexing_features.descriptorBindingStorageBufferUpdateAfterBind &&
             device_info->descriptor_indexing_features.shaderStorageBufferArrayNonUniformIndexing)
         flags |= VKD3D_BINDLESS_CBV | VKD3D_BINDLESS_CBV_AS_SSBO;
@@ -3493,7 +3493,7 @@ static uint32_t vkd3d_bindless_state_get_bindless_flags(struct d3d12_device *dev
     /* Normally, we would be able to use SSBOs conditionally even when maxSSBOAlignment > 4, but
      * applications (RE2 being one example) are of course buggy and don't match descriptor and shader usage of resources,
      * so we cannot rely on alignment analysis to select the appropriate resource type. */
-    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers >= 1000000 &&
+    if (device_info->descriptor_indexing_properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers >= 500000 &&
             device_info->descriptor_indexing_features.descriptorBindingStorageBufferUpdateAfterBind &&
             device_info->properties2.properties.limits.minStorageBufferOffsetAlignment <= 16)
     {
@@ -3525,8 +3525,8 @@ HRESULT vkd3d_bindless_state_init(struct vkd3d_bindless_state *bindless_state,
 
     if ((bindless_state->flags & required_flags) != required_flags)
     {
-        WARN("Insufficient descriptor indexing support.\n");
-        // goto fail;
+        ERR("Insufficient descriptor indexing support.\n");
+        goto fail;
     }
 
     if (bindless_state->flags & VKD3D_RAW_VA_UAV_COUNTER)
